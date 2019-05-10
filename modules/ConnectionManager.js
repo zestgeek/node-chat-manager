@@ -24,14 +24,23 @@ class ConnectionManager {
      * @param {string} socketId - The socket id to add
      */
     addConnection (userId, socketId) {
-        if (this.getConnections(userId)) {
+
+        const userConnections = this.getConnections(userId)
+
+        if (userConnections) {
+
+            const isConnectionAlreadyExist = userConnections.find(userConnection => userConnection == socketId)
+
+            if (isConnectionAlreadyExist) {
+                return
+            }
+
             this.connections[userId] = this.connections[userId].concat(socketId)
     
         } else {
             this.connections[userId] = [socketId]
         }
 
-        console.log(this.connections)
     }
 
     /**
@@ -52,8 +61,6 @@ class ConnectionManager {
                 delete this.connections[userId]
             }
         }
-
-        console.log(this.connections)
     }
 
 }

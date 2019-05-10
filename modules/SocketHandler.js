@@ -2,35 +2,22 @@
  * Socket Handler class responsible for managing socket events
 */
 class SocketHandler {
-    constructor (manager, io) {
+    /**
+     * Constructor
+     * @param { SocketIO } io - socket io object to bind events on
+     */
+    constructor (io) {
         this.io = io
-        this.manager = manager
 
         this.initiate = this.initiate.bind(this)
     }
 
-    initiate () {
-        this.io.on('connection', socket => {
-
-            let socketUserID = null
-        
-            socket.on('connectToSocket', data => {
-                const { userId } = data
-        
-                if (!userId) {
-                    // sendError(socket, 'userId is required when emitting connectToSocket event')
-
-                } else {
-                    this.manager.addConnection(userId, socket.id)
-                    socketUserID = userId
-                }
-            })
-
-            socket.on('disconnect', () => {
-                this.manager.removeUserConnection(socketUserID, socket)
-                socketUserID = null
-            })
-        })
+    /**
+     * Initiate the socket io connection
+     *  @param { function } handlerFunc - handler function which passes socket to outside of this modules developer can easily add events to socket
+     */
+    initiate (handlerFunc) {
+        this.io.on('connection', handlerFunc)
     }
 }
 
