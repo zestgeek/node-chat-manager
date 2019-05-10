@@ -2,6 +2,10 @@ const ConnectionManager = require('./ConnectionManager')
 const SocketHandler = require('./SocketHandler')
 
 class ChatManager {
+    /**
+     * Constructor
+     * @param { SocketIO } io - socket io which will be passed to socket handler
+     */
     constructor (io) {
         this.manager = new ConnectionManager()
         this.handler = new SocketHandler(io)

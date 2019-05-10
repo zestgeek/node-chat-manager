@@ -7,8 +7,6 @@ const ChatManager = require('./modules/ChatManager')
 
 const chatManager = new ChatManager(io)
 
-chatManager.initiate()
-
 server.listen(8000, () => console.log('Started server on 8000'))
 
 app.get('/', (request, response) => {
