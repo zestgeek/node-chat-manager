@@ -13,10 +13,6 @@ chatManager.onEmit('receivedMessage', data => {
     console.log(data)
 })
 
-chatManager.onEmit('receivedMessage', data => {
-    console.log(data, 'hello')
-})
-
 server.listen(8000, () => console.log('Started server on 8000'))
 
 app.get('/', (_, response) => {
