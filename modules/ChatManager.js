@@ -10,6 +10,9 @@ class ChatManager {
         this.manager = new ConnectionManager()
         this.handler = new SocketHandler(io)
 
+        // hold callbacks for emit events
+        this.eventCallbacks = []
+
         this.sendEvent = this.sendEvent.bind(this)
         this.sendError = this.sendError.bind(this)
     }
@@ -35,6 +38,12 @@ class ChatManager {
         socketListToSendData.forEach(
             socketId => socket.broadcast.to(socketId).emit(event, data) 
         )
+
+        if (this.eventCallbacks[event]) {
+            this.eventCallbacks[event].forEach(
+                cb => cb(data)
+            )
+        }
     }
 
     /**
@@ -44,6 +53,15 @@ class ChatManager {
      */
     sendError (socket, error) {
         socket.emit('serverError', error)
+    }
+
+    onEmit (event, cb) {
+        if (this.eventCallbacks[event] && this.eventCallbacks[event].length) {
+            this.eventCallbacks[event].push(cb)
+
+        } else {
+            this.eventCallbacks[event] = [cb]
+        }
     }
 
     /**
@@ -71,13 +89,13 @@ class ChatManager {
             })
         
             socket.on('sendMessage', data => {
-                const { participants, ...restMessagePayload } = data
+                const { participants } = data
         
                 if (!participants.length) {
                     this.sendError(socket, 'participants is required when emitting sendMessage event')
                 }
         
-                this.sendEvent('receivedMessage', restMessagePayload, participants, socket)
+                this.sendEvent('receivedMessage', data, participants, socket)
             })
         })
     }

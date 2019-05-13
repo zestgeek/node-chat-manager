@@ -35,7 +35,7 @@ class ConnectionManager {
                 return
             }
 
-            this.connections[userId] = this.connections[userId].concat(socketId)
+            this.connections[userId].push(socketId)
     
         } else {
             this.connections[userId] = [socketId]
