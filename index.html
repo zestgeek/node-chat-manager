@@ -18,6 +18,7 @@
     <ul id="messages"></ul>
     <input id="m" autocomplete="off" />
     <button onClick="join()">Send</button>
+    <button onClick="sendMessage()">Send</button>
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io('http://localhost:8000');
@@ -25,6 +26,13 @@
       function join () {
         socket.emit('connectToSocket', { userId: document.getElementById('m').value })
       }
+
+      function sendMessage () {
+        socket.emit('sendMessage', { message: 'Hello', participants: ['123'], fromUser: document.getElementById('m').value })
+      }
+
+      socket.on('receivedMessage', function (data) { console.log(data) })
+
       // $(function () {
       //   var socket = io('http://localhost:8000');
       //   $('form').submit(function(){

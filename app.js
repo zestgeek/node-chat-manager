@@ -3,23 +3,18 @@ const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
 
-const ConnectionManager = require('./modules/ConnectionManager')
-const SocketHandler = require('./modules/SocketHandler')
+const ChatManager = require('./modules/ChatManager')
 
-const sendError = (socket, error) => {
-    socket.emit('serverError', error)
-}
+const chatManager = new ChatManager(io)
 
-const manager = new ConnectionManager()
-const handler = new SocketHandler(manager, io)
+chatManager.initiate()
 
-// to initiate the handler
-handler.initiate()
-
-server.listen(8000, () => {
-    console.log('8000')
+chatManager.onEmit('receivedMessage', data => {
+    console.log(data)
 })
 
-app.get('/', (request, response) => {
+server.listen(8000, () => console.log('Started server on 8000'))
+
+app.get('/', (_, response) => {
     response.sendFile(__dirname + '/index.html')
 })
